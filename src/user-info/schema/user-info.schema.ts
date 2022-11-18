@@ -33,12 +33,21 @@ export  const  userInfoSchema = new mongoose.Schema({
         require: true
     },
     picture:{
-        data: Buffer,
-        contentType: String
+        type: String,
+        
     },
     citation: {
         type: String,
+
     },
+    createAt: {
+        type: Date,
+        default: Date.now()
+    },
+    updateAt: {
+        type: Date,
+        default: Date.now()
+    }
 
 });
 

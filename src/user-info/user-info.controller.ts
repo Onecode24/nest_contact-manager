@@ -3,11 +3,11 @@ import { UserInfoService } from './user-info.service';
 import { CreateUserInfoDto } from './dto/create-user-info.dto';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 
-@Controller('user-info')
+@Controller()
 export class UserInfoController {
   constructor(private readonly userInfoService: UserInfoService) {}
 
-  @Post()
+  @Post('create-contact')
   create(@Body() createUserInfoDto: CreateUserInfoDto) {
     return this.userInfoService.create(createUserInfoDto);
   }

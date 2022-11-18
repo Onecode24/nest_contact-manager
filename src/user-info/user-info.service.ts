@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { CreateUserInfoDto } from './dto/create-user-info.dto';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
+import { IUserInfo } from './schema/user-info.schema';
 
 @Injectable()
 export class UserInfoService {
+
+  constructor(@InjectModel('UserInfo') private UserModel: Model<IUserInfo>) {}
+
   create(createUserInfoDto: CreateUserInfoDto) {
-    return 'This action adds a new userInfo';
+    const createdUserInfo = new this.UserModel(createUserInfoDto);
+    return createdUserInfo.save();
   }
 
   findAll() {
