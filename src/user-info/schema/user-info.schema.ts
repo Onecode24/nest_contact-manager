@@ -34,11 +34,11 @@ export  const  userInfoSchema = new mongoose.Schema({
     },
     picture:{
         type: String,
-        
+        unique: true,
+        require: true
     },
     citation: {
         type: String,
-
     },
     createAt: {
         type: Date,
