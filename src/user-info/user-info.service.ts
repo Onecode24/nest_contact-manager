@@ -47,7 +47,7 @@ export class UserInfoService {
   async findOne(id: String) {
     try {
       const user = await this.UserModel.findById(id).exec();
-      if(!user || user.$isEmpty){
+      if(!user || user == null){
         throw new NotFoundException('User not found');
       }
       return{
@@ -65,9 +65,9 @@ export class UserInfoService {
   //update one user 
   async update(id: String, updateUserInfoDto: UpdateUserInfoDto) {
     try {
-      const updateUser = await this.UserModel.findByIdAndUpdate(id,updateUserInfoDto).exec();
-      if(!updateUser){
-        throw new NotFoundException('Not found user to update')
+      const updateUser = await this.UserModel.findByIdAndUpdate(id,updateUserInfoDto);
+      if(!updateUser || updateUser == null){
+        throw new NotFoundException('User not found')
       }
       return {
         content: updateUser,
