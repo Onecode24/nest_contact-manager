@@ -5,6 +5,7 @@ import { UpdateUserInfoDto } from './dto/update-user-info.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { identity } from 'rxjs';
 
 @Controller()
 export class UserInfoController {
@@ -23,28 +24,22 @@ export class UserInfoController {
     })
   }))
   create(@Body() createUserInfoDto: CreateUserInfoDto, @UploadedFile() file) {
-    console.log('file : ',file);
-    createUserInfoDto.picture = file.filename;
-    return this.userInfoService.create(createUserInfoDto);
+    return this.userInfoService.create(createUserInfoDto, file)
   }
 
-  @Get()
-  findAll() {
+  @Patch('update-contact/:id')
+  async updateContact(@Param('id') id , updateContact: UpdateUserInfoDto ){
+    return this.userInfoService.update(id, updateContact);
+  }
+
+  @Get('contacts')
+ async getAllContacts(){  
     return this.userInfoService.findAll();
-  }
+ }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userInfoService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserInfoDto: UpdateUserInfoDto) {
-    return this.userInfoService.update(+id, updateUserInfoDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userInfoService.remove(+id);
-  }
+ @Get('contact/:id')
+ async getContact(@Param('id') id: String){ 
+    return this.userInfoService.findOne(id)
+ }
+  
 }

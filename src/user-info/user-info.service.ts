@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, UploadedFile } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserInfoDto } from './dto/create-user-info.dto';
@@ -10,24 +10,92 @@ export class UserInfoService {
 
   constructor(@InjectModel('UserInfo') private UserModel: Model<IUserInfo>) {}
 
-  create(createUserInfoDto: CreateUserInfoDto) {
-    const createdUserInfo = new this.UserModel(createUserInfoDto);
-    return createdUserInfo.save();
+  //
+  async create(createUserInfoDto: CreateUserInfoDto,@UploadedFile() file) {
+    try {
+      createUserInfoDto.picture = file.filename;
+      const newContact = await this.UserModel.create(createUserInfoDto);
+      return {
+        content: newContact,
+        sucessed: true
+      }
+    } catch (error) {
+      return {
+        content: error,
+        sucessed: false
+      }
+    }
   }
 
-  findAll() {
-    return `This action returns all userInfo`;
+   // Get All contacts
+  async findAll() {
+    try {
+      const allContact = await this.UserModel.find();
+      return{
+        contents: allContact,
+        sucess: true
+      }
+    } catch (error) {
+      return{
+        contents: error,
+        sucess: false
+      }
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userInfo`;
+  // get one user by it's id
+  async findOne(id: String) {
+    try {
+      const user = await this.UserModel.findById(id).exec();
+      if(!user || user.$isEmpty){
+        throw new NotFoundException('User not found');
+      }
+      return{
+        contents: user,
+        sucess: true
+      }
+    } catch (error) {
+      return {
+        content: error,
+        sucess: false
+      } 
+    }
   }
 
-  update(id: number, updateUserInfoDto: UpdateUserInfoDto) {
-    return `This action updates a #${id} userInfo`;
+  //update one user 
+  async update(id: String, updateUserInfoDto: UpdateUserInfoDto) {
+    try {
+      const updateUser = await this.UserModel.findByIdAndUpdate(id,updateUserInfoDto).exec();
+      if(!updateUser){
+        throw new NotFoundException('Not found user to update')
+      }
+      return {
+        content: updateUser,
+        sucess: true
+      }
+    } catch (error) {
+      return{
+        content: error,
+        sucess: false
+      }
+    }
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userInfo`;
+  // remove contact by it id
+  async remove(id: number) {
+  try {
+    const userRemoved = await this.UserModel.findByIdAndDelete(id)
+    if(!userRemoved){
+      throw new NotFoundException('User not Found');
+    }
+    return this.findAll();
+
+  } catch (error) {
+    return {
+      content: error,
+      sucess: false
+    }
+  }
   }
 }
