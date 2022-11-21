@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, Put } from '@nestjs/common';
 import { UserInfoService } from './user-info.service';
 import { CreateUserInfoDto } from './dto/create-user-info.dto';
 import { UpdateUserInfoDto } from './dto/update-user-info.dto';
@@ -27,8 +27,8 @@ export class UserInfoController {
     return this.userInfoService.create(createUserInfoDto, file)
   }
 
-  @Patch('update-contact/:id')
-  async updateContact(@Param('id') id , updateContact: UpdateUserInfoDto ){
+  @Put('update-contact/:id')
+  async updateContact(@Param('id') id ,@Body() updateContact: UpdateUserInfoDto ){
     return this.userInfoService.update(id, updateContact);
   }
 
@@ -41,5 +41,6 @@ export class UserInfoController {
  async getContact(@Param('id') id: String){ 
     return this.userInfoService.findOne(id)
  }
+ 
   
 }
