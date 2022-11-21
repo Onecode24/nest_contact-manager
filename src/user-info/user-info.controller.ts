@@ -42,5 +42,9 @@ export class UserInfoController {
     return this.userInfoService.findOne(id)
  }
  
+ @Delete('remove-contact/:id')
+ async deleteContact(@Param('id') id: String){
+  return this.userInfoService.remove(id);
+ }
   
 }

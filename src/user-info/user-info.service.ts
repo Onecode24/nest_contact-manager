@@ -83,7 +83,7 @@ export class UserInfoService {
   }
 
   // remove contact by it id
-  async remove(id: number) {
+  async remove(id: String) {
   try {
     const userRemoved = await this.UserModel.findByIdAndDelete(id)
     if(!userRemoved){
